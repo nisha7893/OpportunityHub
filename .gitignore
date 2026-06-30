@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Next.js
+.next/
+client/.next/
+
+# Environment
+.env
+client/.env
+server/.env
+
+# Build
+dist/
+build/
