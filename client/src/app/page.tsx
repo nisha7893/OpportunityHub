@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 type Opportunity = {
   _id: string;
   title: string;
@@ -229,7 +231,7 @@ export default function Home() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch(`${API}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -249,7 +251,7 @@ export default function Home() {
 
     setLoading(true);
 
-    fetch("http://localhost:5000/api/opportunities?" + params.toString())
+    fetch(`${API}/api/opportunities?` + params.toString())
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -271,12 +273,11 @@ export default function Home() {
     );
 
     try {
-      await fetch(`http://localhost:5000/api/opportunities/${jobId}/save`, {
+      await fetch(`${API}/api/opportunities/${jobId}/save`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
-      // revert on failure
       setSavedIds((prev) =>
         prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId]
       );
