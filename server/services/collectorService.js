@@ -1,11 +1,41 @@
 const axios = require("axios");
 const Opportunity = require("../models/Opportunity");
 
+// Remove jobs whose deadline has passed
+const removeExpiredOpportunities = async () => {
+    const result = await Opportunity.deleteMany({ deadline: { $lt: new Date() } });
+    console.log("Expired Opportunities Removed:", result.deletedCount);
+    return result.deletedCount;
+};
+
+// Remove jobs whose application link is dead (404, removed, etc.)
+const removeDeadLinkOpportunities = async () => {
+    const allJobs = await Opportunity.find({});
+    let removedCount = 0;
+
+    for (const job of allJobs) {
+        try {
+            await axios.head(job.applicationLink, { timeout: 5000 });
+        } catch (error) {
+            // Link is dead or unreachable — remove it
+            await Opportunity.findByIdAndDelete(job._id);
+            removedCount++;
+        }
+    }
+
+    console.log("Dead Link Opportunities Removed:", removedCount);
+    return removedCount;
+};
+
 const collectOpportunities = async () => {
     try {
         console.log("==================================");
         console.log("Starting Opportunity Collection (India - Adzuna)...");
         console.log("==================================");
+
+        // Step 1: Clean up expired and dead-link opportunities first
+        await removeExpiredOpportunities();
+        await removeDeadLinkOpportunities();
 
         const appId = process.env.ADZUNA_APP_ID;
         const appKey = process.env.ADZUNA_APP_KEY;
