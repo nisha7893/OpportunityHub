@@ -20,7 +20,7 @@ const createOpportunity = async (req, res) => {
 // Get All Opportunities (Search Support)
 const getAllOpportunities = async (req, res) => {
     try {
-        const { search, location, type } = req.query;
+        const { search, location, type, category } = req.query;
 
         let query = {};
 
@@ -37,6 +37,10 @@ const getAllOpportunities = async (req, res) => {
 
         if (type) {
             query.type = type;
+        }
+
+        if (category) {
+            query.category = category;
         }
 
         const opportunities = await Opportunity.find(query);

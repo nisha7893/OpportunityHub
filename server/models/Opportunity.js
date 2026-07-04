@@ -26,6 +26,20 @@ const opportunitySchema = new mongoose.Schema(
       required: true,
     },
 
+    category: {
+      type: String,
+      enum: [
+        "Web Development",
+        "App Development",
+        "Data Science",
+        "DevOps",
+        "Software Engineering",
+        "QA/Testing",
+        "Other",
+      ],
+      default: "Other",
+    },
+
     description: {
       type: String,
       required: true,
