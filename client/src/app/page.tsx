@@ -11,6 +11,7 @@ type Opportunity = {
   company: string;
   location: string;
   type: string;
+  category: string;
   description: string;
   skills: string[];
   salary: string;
@@ -221,6 +222,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [savedIds, setSavedIds] = useState<string[]>([]);
@@ -248,6 +250,7 @@ export default function Home() {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
     if (typeFilter) params.append("type", typeFilter);
+    if (categoryFilter) params.append("category", categoryFilter);
     setLoading(true);
     fetch(`${API}/api/opportunities?` + params.toString())
       .then((res) => res.json())
@@ -257,7 +260,7 @@ export default function Home() {
       })
       .catch(() => setError("Could not connect to server"))
       .finally(() => setLoading(false));
-  }, [search, typeFilter]);
+  }, [search, typeFilter, categoryFilter]);
 
   const handleToggleSave = async (jobId: string) => {
     const token = localStorage.getItem("token");
@@ -349,10 +352,18 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex gap-3 mb-6">
+          <div className="flex gap-3 mb-4 flex-wrap">
             {["", "Internship", "Job"].map((t) => (
               <button key={t || "all"} onClick={() => setTypeFilter(t)} style={{ backgroundColor: typeFilter === t ? "#0f766e" : darkMode ? "#1c1f26" : "#ffffff", color: typeFilter === t ? "#ffffff" : textMain, borderColor: darkMode ? "#2a2e37" : "#e5e7eb" }} className="px-5 py-2 rounded-full text-sm font-semibold border">
                 {t === "" ? "All" : t}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-3 mb-6 flex-wrap">
+            {["", "Web Development", "App Development", "Data Science", "DevOps", "Software Engineering", "QA/Testing"].map((c) => (
+              <button key={c || "all-cat"} onClick={() => setCategoryFilter(c)} style={{ backgroundColor: categoryFilter === c ? "#0f766e" : darkMode ? "#1c1f26" : "#ffffff", color: categoryFilter === c ? "#ffffff" : textMain, borderColor: darkMode ? "#2a2e37" : "#e5e7eb" }} className="px-5 py-2 rounded-full text-sm font-semibold border">
+                {c === "" ? "All Roles" : c}
               </button>
             ))}
           </div>
