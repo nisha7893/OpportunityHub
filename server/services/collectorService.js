@@ -5,28 +5,71 @@ const Opportunity = require("../models/Opportunity");
 // Whitelist: only these companies (or close matches) are accepted
 // ==================================================
 const TOP_COMPANIES = [
+    // FAANG / Global tech giants
     "Google", "Microsoft", "Amazon", "Meta", "Apple", "Adobe", "Netflix",
     "Oracle", "IBM", "Intel", "Nvidia", "Salesforce", "SAP", "Cisco",
     "VMware", "ServiceNow", "Qualcomm", "Dell", "HP", "Uber", "Airbnb",
+
+    // Finance / Banking / Fintech giants
     "Mastercard", "Visa", "JPMorgan", "JP Morgan", "Goldman Sachs",
     "Morgan Stanley", "American Express", "Barclays", "Deutsche Bank",
     "HSBC", "Citi", "Citibank", "PayPal", "Paytm", "PhonePe", "Razorpay",
-    "CRED", "Groww", "Zerodha", "BharatPe",
+    "CRED", "Groww", "Zerodha", "BharatPe", "Upstox", "Cashfree", "Pine Labs",
+    "Juspay", "Standard Chartered", "ANZ", "Wells Fargo", "Fidelity",
+    "BlackRock", "State Street", "Northern Trust", "Synchrony", "UBS",
+    "Credit Suisse", "Nomura", "Societe Generale", "Nasdaq",
+
+    // Indian IT services / consulting
     "TCS", "Infosys", "Wipro", "HCL", "Tech Mahindra", "Accenture",
     "Cognizant", "Capgemini", "Deloitte", "EY", "PwC", "KPMG",
+    "LTIMindtree", "Mindtree", "L&T Infotech", "L&T Technology",
+    "Persistent Systems", "Mphasis", "Hexaware", "Cyient", "Zensar",
+    "Sonata Software", "Coforge", "Birlasoft", "Tata Elxsi", "Quest Global",
+    "GlobalLogic", "EPAM", "Publicis Sapient", "Virtusa", "NTT Data",
+    "DXC Technology", "Fujitsu", "Hitachi", "Nagarro", "Endava",
+    "Grid Dynamics", "Synechron", "Xoriant", "ThoughtWorks", "Atos",
+    "UST Global", "Happiest Minds", "Newgen", "Ramco Systems", "Larsen & Toubro",
+
+    // Indian unicorns / top startups
     "Flipkart", "Swiggy", "Zomato", "Ola", "Myntra", "Meesho",
     "Zepto", "Nykaa", "PolicyBazaar", "Freshworks", "Zoho",
     "InMobi", "Urban Company", "Delhivery", "Lenskart", "CarDekho",
     "Dream11", "Unacademy", "Byju", "PhysicsWallah", "upGrad",
     "Postman", "BrowserStack", "Chargebee", "Darwinbox", "Innovaccer",
-    "Rippling", "Amagi", "Sprinklr", "Gupshup",
+    "Rippling", "Amagi", "Sprinklr", "Gupshup", "Whatfix", "Hasura",
+    "MindTickle", "Springworks", "CleverTap", "MoEngage", "Netcore",
+    "WebEngage", "Uniphore", "Yellow.ai", "Haptik", "Observe.AI",
+    "Fractal Analytics", "Mu Sigma", "LatentView", "Tiger Analytics",
+    "ZS Associates", "Course5 Intelligence", "Games24x7", "Nazara",
+    "MPL", "Zupee", "MakeMyTrip", "Yatra", "Cleartrip", "Ixigo",
+    "Licious", "Rebel Foods", "Dunzo", "Bigbasket", "Grofers", "Blinkit",
+    "Cure.fit", "Cult.fit", "Pharmeasy", "1mg", "Practo", "Vedantu",
+    "Toppr", "WhiteHat Jr", "Simplilearn", "Great Learning",
+
+    // Semiconductor / Hardware / Product companies
     "Samsung", "Sony", "LG", "Bosch", "Siemens", "Schneider Electric",
-    "Walmart", "Target", "ThoughtWorks", "Atlassian", "GitHub", "GitLab",
+    "MediaTek", "Texas Instruments", "Analog Devices", "Skyworks",
+    "Marvell", "Cadence", "Synopsys", "Mentor Graphics", "ARM",
+    "Renesas", "STMicroelectronics", "NXP Semiconductors", "Infineon",
+    "AMD", "Broadcom", "Micron", "Western Digital", "Seagate",
+    "Arista Networks", "F5 Networks", "Nokia", "Ericsson", "Philips",
+    "ABB", "Emerson", "Caterpillar", "John Deere", "Ford", "General Motors",
+    "Continental", "Harman", "Visteon", "Honeywell", "GE",
+
+    // Global SaaS / Product companies
+    "Walmart", "Target", "Atlassian", "GitHub", "GitLab",
     "Stripe", "Shopify", "LinkedIn", "Twitter", "X Corp", "Snapchat",
     "IOHK", "Bloomberg", "Reuters", "Nutanix", "Juniper Networks",
     "Palo Alto Networks", "Akamai", "Autodesk", "Intuit", "Workday",
+    "Splunk", "Palantir", "Databricks", "Snowflake", "MongoDB", "Elastic",
+    "Confluent", "HashiCorp", "Twilio", "Okta", "Cloudflare", "Datadog",
+    "PagerDuty", "Zendesk", "HubSpot", "Slack", "Zoom", "DocuSign",
+    "Coupa", "Anaplan", "Asana", "Notion", "Figma", "Canva", "Grammarly",
+    "Dropbox", "Box", "Pinterest", "Reddit", "Discord", "Spotify",
+    "ByteDance", "TikTok", "Booking.com", "Expedia",
 ];
 
+// Check if a company name matches (contains) anything in the whitelist
 const isTopCompany = (companyName) => {
     if (!companyName) return false;
     const normalized = companyName.toLowerCase();
